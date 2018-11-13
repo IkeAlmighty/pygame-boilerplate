@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 
 """engine contains the Engine class, which should be 
 extended by your main class (or cutsey named 'Game' class) 
@@ -38,6 +38,8 @@ class Engine:
         self.screen_size = screen_size
 
         pygame.init()
+
+        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0, 0)
 
         self.font = pygame.font.SysFont(font_name, font_size)
         self.__screen = pygame.display.set_mode(self.screen_size, FULLSCREEN)
