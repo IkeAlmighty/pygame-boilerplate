@@ -9,7 +9,7 @@ class Game(Engine):
     def preload(self):
         #do something
 
-    def loop(self, fps = 60):
+    def loop(self):
         #do something each frame (for instance:)
         super().render(pygame.Surface(100, 100), (0, 0))
 
