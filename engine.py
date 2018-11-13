@@ -75,7 +75,7 @@ class Engine:
 
         self.cleanup()
 
-    def render(self, renderable_component):
+    def render_later(self, renderable_component):
         self.__render_queue.insert(0, renderable_component)
 
     def preload(self):
@@ -95,3 +95,38 @@ class RenderableComponent:
 
     def get_pos(self):
         raise NotImplementedError("get_pos must be overriden by subclass")
+
+class EventCache:
+
+    def __init__(self):
+        self.__events = []
+        self.__mouse_buttons = pygame.mouse.get_pressed()
+        self.__mouse_buttons_lastframe = None
+
+    def update(self):
+        self.__events = pygame.event.get()
+        self.__mouse_buttons_lastframe = self.__mouse_buttons
+        self.__mouse_buttons = pygame.mouse.get_pressed()
+
+    def key_down(self, key):
+        for event in self.__events:
+            if event.type == pygame.KEYDOWN and event.key == key:
+                return True
+
+        return False
+
+    def key_up(self, key):
+        for event in self.__events:
+            if event.type == pygame.KEYUP and event.key == key:
+                return True
+
+        return False
+
+    def mouse_pressed(self, button):
+        return self.__mouse_buttons[button] and not self.__mouse_buttons_lastframe[button]
+
+    def mouse_released(self, button):
+        return not self.__mouse_buttons[button] and self.__mouse_buttons_lastframe[button]
+
+    def mouse_long_pressed(self, button):
+        return self.__mouse_buttons[button] and self.__mouse_buttons_lastframe[button]
