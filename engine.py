@@ -22,7 +22,9 @@ game.start(screen_size=[800, 600], pygame.FULLSCREEN, )
 """
 
 class Engine:
-        
+
+    font = pygame.font.SysFont(font_name, font_size)
+
     def start(self, screen_size, FULLSCREEN = 0, font_name='', font_size = 16):
         """This method is called to start the game. It sets up the game defaults
         and calls the following methods:
@@ -41,7 +43,6 @@ class Engine:
 
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0, 0)
 
-        self.font = pygame.font.SysFont(font_name, font_size)
         self.__screen = pygame.display.set_mode(self.screen_size, FULLSCREEN)
         self.__render_queue = []
         
@@ -130,3 +131,25 @@ class EventCache:
 
     def mouse_long_pressed(self, button):
         return self.__mouse_buttons[button] and self.__mouse_buttons_lastframe[button]
+
+class Button(engine.RenderableComponent):
+
+    def __init__(self, topleft, text = None, image = None):
+        if text is None and image is None:
+            raise Exception("either text of image must be a non-none object")
+        
+        self.__topleft = topleft
+
+        if image is not None:
+            self.image = image
+            self.rect = image.get_rect()
+            self.rect.move_ip(self.__topleft[0], self.__topleft[1])
+
+        elif text is not None:
+            self.image = Engine.font.render(text, False, (255, 255, 255), (0, 0, 0))
+
+    def get_image(self):
+        return self.image
+
+    def get_pos(self):
+        return self.pos
