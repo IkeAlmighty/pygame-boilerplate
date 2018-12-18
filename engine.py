@@ -70,7 +70,10 @@ class Engine:
                     break
                 else: 
                     render_component = self.__render_queue.pop()
-                    self.__screen.blit(render_component.get_image(), render_component.get_pos())
+                    try:
+                        self.__screen.blit(render_component.get_image(), render_component.get_pos())
+                    except TypeError:
+                        print(TypeError, "get_pos of ", type(render_component), "pos: ", render_component.get_pos())
             
             self.frame_count +=1
             if self.frame_count == 1000: self.frame_count == 0
@@ -94,7 +97,7 @@ class Engine:
         raise NotImplementedError("cleanup(self) must overridden by subclass")
 
 
-class RenderableComponent:
+class Renderable:
 
     def get_image(self):
         raise NotImplementedError("get_image(self) must be overridden by subclass")
@@ -140,7 +143,7 @@ class EventCache:
     def mouse_long_pressed(self, button):
         return self.__mouse_buttons[button] and self.__mouse_buttons_lastframe[button]
 
-class Button(RenderableComponent):
+class Button(Renderable):
 
     def __init__(self, topleft = (0, 0), text = None, image = None):
         if text is None and image is None:
